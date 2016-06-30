@@ -29,12 +29,13 @@ public class AddContent extends Activity implements OnClickListener {
 	private VideoView c_video;
 	private NoteDB noteDB;
 	private SQLiteDatabase dbWriter;
-	private File imgPath,videoPath;
+	private File imgPath, videoPath;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.addcontent);
+		// 得到上一个activity的Intent参数
 		val = getIntent().getStringExtra("flag");
 		saveBtn = (Button) findViewById(R.id.save);
 		cancelBtn = (Button) findViewById(R.id.cancel);
@@ -49,20 +50,26 @@ public class AddContent extends Activity implements OnClickListener {
 		init();
 	}
 
+	// 初始化操作
 	public void init() {
+		// 添加文字
 		if (val.equals("1")) {
 			c_image.setVisibility(View.GONE);
 			c_video.setVisibility(View.GONE);
 		}
+		// 添加图片
 		if (val.equals("2")) {
 			c_image.setVisibility(View.VISIBLE);
 			c_video.setVisibility(View.GONE);
 			Intent iimage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			// 这里有问题，Android改版后，不允许在外置储存卡直接获取图片，视频
 			imgPath = new File(Environment.getExternalStorageDirectory()
 					.getAbsoluteFile() + "/DCIM/" + getTime() + ".jpg");
 			iimage.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imgPath));
+			// forresult的request参数是int类型
 			startActivityForResult(iimage, 1);
 		}
+		// 添加视频
 		if (val.equals("3")) {
 			c_image.setVisibility(View.GONE);
 			c_video.setVisibility(View.VISIBLE);
@@ -88,15 +95,17 @@ public class AddContent extends Activity implements OnClickListener {
 		}
 	}
 
+	// 添加内容到数据库
 	private void addContent() {
 		ContentValues values = new ContentValues();
 		values.put(NoteDB.CONTENT, c_text.getText().toString());
 		values.put(NoteDB.TIME, getTime());
 		values.put(NoteDB.PATH, imgPath + "");
-		values.put(NoteDB.VIDEO, videoPath+"");
+		values.put(NoteDB.VIDEO, videoPath + "");
 		dbWriter.insert(NoteDB.TABLE_NAME, null, values);
 	}
 
+	// 获取当前系统时间的方法
 	public String getTime() {
 		return (new SimpleDateFormat("yyyy年MM月ss日 HH:mm:ss").format(new Date()));
 	}
@@ -108,7 +117,7 @@ public class AddContent extends Activity implements OnClickListener {
 			Bitmap bitmap = BitmapFactory.decodeFile(imgPath.getAbsolutePath());
 			c_image.setImageBitmap(bitmap);
 		}
-		if(requestCode == 2){
+		if (requestCode == 2) {
 			c_video.setVideoURI(Uri.fromFile(videoPath));
 			c_video.start();
 		}

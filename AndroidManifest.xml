@@ -23,7 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.mr.notes.AddContent" android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.mr.notes.AddContent"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mr.notes.SelectedAct"
+            android:screenOrientation="portrait" />
     </application>
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 </manifest>
